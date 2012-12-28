@@ -23,6 +23,8 @@ def new_ranking_board(request):
             board.owner = request.user
             board.save()
             form.save_m2m()
+            board.add_player(request.user)
+            [board.add_player(p) for p in board.players.all()]
             return redirect('/')
     else:
         form = RankingBoardForm()

@@ -16,6 +16,7 @@ class RankingBoard(models.Model):
     def add_player(self, player):
         if (player not in self.players.all()):
             self.players.add(player)
+        if not Ranking.objects.filter(player__id=player.id).filter(board=self):
             Ranking.objects.create(player=player, board=self).save()
 
     def ranked_players(self):
@@ -139,7 +140,13 @@ class UserProfile(models.Model):
         return (won_matches, matches)
 
     def get_ranking(self, ranking_board):
+        # ranking = Ranking.objects.filter(player__id=self.user.id).filter(board=ranking_board)[0]
         ranking = Ranking.objects.filter(player__id=self.user.id).filter(board=ranking_board)[0]
+        # ranking = Ranking.objects.filter(player__id=self.user.id).filter(board=ranking_board)
+        # if ranking:
+        #     ranking = ranking[0]
+        # else:
+        #     ranking = None
         return ranking
 
     # def get_all_challenges(self):
