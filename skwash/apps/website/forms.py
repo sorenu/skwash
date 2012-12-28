@@ -8,4 +8,3 @@ class RankingBoardForm(forms.ModelForm):
     class Meta:
         model = RankingBoard
         fields = ('title', 'players')
-        # filter_horizontal = ('players',)
