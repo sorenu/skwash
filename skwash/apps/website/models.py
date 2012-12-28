@@ -28,8 +28,8 @@ class RankingBoard(models.Model):
         string = 'Title: %s\n' % (self.title)
         string += 'Owner: %s\n' % (self.owner)
         for player in self.ranked_players():
-            rank = player.get_profile().get_ranking(self).score
-            wins, matches = player.get_profile().get_winnings()
+            rank = player[0].get_profile().get_ranking(self).score
+            wins, matches = player[0].get_profile().get_winnings()
             string += '%s: %.3f (%d / %d)\n' % (player, rank, len(wins), len(matches))
         return string
 
