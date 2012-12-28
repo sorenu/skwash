@@ -1,0 +1,27 @@
+{% extends "registration/base_registration.html" %}
+
+{% block container %}
+
+{% if form.errors %}
+{{form.errors}}
+
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+{% load url from future %}
+<form class="form-signin" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+{% csrf_token %}
+
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <input name="username" type="text" class="input-block-level" placeholder="Email address">
+    <input name="password" type="password" class="input-block-level" placeholder="Password">
+    <label class="checkbox">
+    <input type="checkbox" value="remember-me"> Remember me
+    </label>
+    <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+
+<!-- <input type="submit" value="login" /> -->
+<!-- <input type="hidden" name="next" value="{{ next }}" /> -->
+<input type="hidden" name="next" value="/" />
+</form>
+
+{% endblock %}

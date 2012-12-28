@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block container %}
+
+
+<form action="." method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<!-- <input type="submit" value="Submit" /> -->
+{% if owner %}
+    <input type="hidden" name="owner_id" id="id_owner" value="{{ owner }}" />
+{% endif %}
+<button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
+{% endblock %}

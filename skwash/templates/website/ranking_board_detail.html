@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block container %}
+    <p>Title: {{ object.title }}</p>
+    <p>Owner: {{ object.owner }}</p>
+    <p>Players:
+    {% for player in object.ranked_players %}
+        {{ player.0 }} ({{ player.1 }}),
+    {% endfor %}
+    </p>
+
+{% endblock %}
