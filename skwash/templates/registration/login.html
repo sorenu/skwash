@@ -1,10 +1,9 @@
 {% extends "registration/base_registration.html" %}
+{% load placeholder %}
 
 {% block container %}
 
 {% if form.errors %}
-{{form.errors}}
-
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
 {% load url from future %}
@@ -12,11 +11,12 @@
 {% csrf_token %}
 
     <h2 class="form-signin-heading">Please sign in</h2>
-    <input name="username" type="text" class="input-block-level" placeholder="Email address">
-    <input name="password" type="password" class="input-block-level" placeholder="Password">
-    <label class="checkbox">
-    <input type="checkbox" value="remember-me"> Remember me
-    </label>
+    {% for field in form %}
+        <div class="fieldWrapper">
+            {{ field.errors }}
+            {{ field|placeholder:field.label }}
+        </div>
+    {% endfor %}
     <button class="btn btn-large btn-primary" type="submit">Sign in</button>
 
 <!-- <input type="submit" value="login" /> -->
