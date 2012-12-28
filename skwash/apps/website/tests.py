@@ -26,15 +26,15 @@ class RankingBoardTest(TestCase):
 
         self.ranking_board = RankingBoard.objects.create(owner=self.player1, title='League of Test')
 
-        self.ranking_board.add_player(self.player1)
-        self.ranking_board.add_player(self.player2)
-        self.ranking_board.add_player(self.player3)
-        self.ranking_board.add_player(self.player4)
-        # self.ranking_board.add_player(self.player5)
-        # self.ranking_board.add_player(self.player6)
-        # self.ranking_board.add_player(self.player7)
-        # self.ranking_board.add_player(self.player8)
-        # self.ranking_board.add_player(self.player9)
+        self.ranking_board.players.add(self.player1)
+        self.ranking_board.players.add(self.player2)
+        self.ranking_board.players.add(self.player3)
+        self.ranking_board.players.add(self.player4)
+        # self.ranking_board.players.add(self.player5)
+        # self.ranking_board.players.add(self.player6)
+        # self.ranking_board.players.add(self.player7)
+        # self.ranking_board.players.add(self.player8)
+        # self.ranking_board.players.add(self.player9)
         
         self.player2.get_profile().challenge(self.player1, self.ranking_board)
         self.player3.get_profile().challenge(self.player1, self.ranking_board)
@@ -43,10 +43,10 @@ class RankingBoardTest(TestCase):
         
         # Just some extra data to test that the model does not get confused
         self.ranking_board2 = RankingBoard.objects.create(owner=self.player1)
-        self.ranking_board2.add_player(self.player1)
-        self.ranking_board2.add_player(self.player2)
-        self.ranking_board2.add_player(self.player3)
-        self.ranking_board2.add_player(self.player4)
+        self.ranking_board2.players.add(self.player1)
+        self.ranking_board2.players.add(self.player2)
+        self.ranking_board2.players.add(self.player3)
+        self.ranking_board2.players.add(self.player4)
         self.player2.get_profile().challenge(self.player1, self.ranking_board2)
         self.player3.get_profile().challenge(self.player1, self.ranking_board2)
         self.player4.get_profile().challenge(self.player1, self.ranking_board2)
@@ -65,14 +65,14 @@ class RankingBoardTest(TestCase):
         self.assertEqual(1 + 1, 2)
 
 
-    def test_add_player(self):
+    def test_add_players(self):
         """
         Test that a player only gets added once to the ranking board.
         """
         before_count = len(self.ranking_board.players.all())
-        self.ranking_board.add_player(self.player1)
-        self.ranking_board.add_player(self.player1)
-        self.ranking_board.add_player(self.player2)
+        self.ranking_board.players.add(self.player1)
+        self.ranking_board.players.add(self.player1)
+        self.ranking_board.players.add(self.player2)
         after_count = len(self.ranking_board.players.all())
         self.assertTrue(before_count == after_count)
 

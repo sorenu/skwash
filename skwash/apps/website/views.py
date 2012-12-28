@@ -10,9 +10,11 @@ from skwash.apps.website.models import RankingBoard
 def logout(request):
     return logout_then_login(request)
 
+
 @login_required
 def view_ranking_board(request, ranking_board_id):
     return HttpResponse()
+
 
 @login_required
 def new_ranking_board(request):
@@ -23,12 +25,11 @@ def new_ranking_board(request):
             board.owner = request.user
             board.save()
             form.save_m2m()
-            board.add_player(request.user)
-            [board.add_player(p) for p in board.players.all()]
+            board.players.add(request.user)
             return redirect('/')
     else:
         form = RankingBoardForm()
-    return render(request, 'website/ranking_board_form.html', {'form': form})
+    return render(request, 'website/rankingboard_form.html', {'form': form})
 
     # return create_object(
     #     request,
@@ -37,6 +38,7 @@ def new_ranking_board(request):
     #     template_name = 'website/ranking_board_form.html',
     #     extra_context = {'owner': request.user.id},
     # )
+
 
 @login_required
 def edit_ranking_board(request, ranking_board_id):
@@ -48,7 +50,7 @@ def edit_ranking_board(request, ranking_board_id):
         form_class = RankingBoardForm,
         object_id = ranking_board_id,
         post_save_redirect = '/',
-        template_name = 'website/ranking_board_form.html',
+        template_name = 'website/rankingboard_form.html',
     )
 
 
@@ -62,7 +64,7 @@ def delete_ranking_board(request, ranking_board_id):
         model = RankingBoard,
         object_id = ranking_board_id,
         post_delete_redirect = '/',
-        template_name = 'website/ranking_board_confirm_delete.html',
+        template_name = 'website/rankingboard_confirm_delete.html',
     )
 
 

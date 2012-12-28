@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-
+from django.db.models.signals import pre_save, post_save, m2m_changed
 
 
 ########################################################
@@ -12,12 +11,6 @@ class RankingBoard(models.Model):
     owner = models.ForeignKey(User, related_name='owned_ranking_boards')
     players = models.ManyToManyField(User)
     title = models.CharField(max_length=200)
-
-    def add_player(self, player):
-        if (player not in self.players.all()):
-            self.players.add(player)
-        if not Ranking.objects.filter(player__id=player.id).filter(board=self):
-            Ranking.objects.create(player=player, board=self).save()
 
     def ranked_players(self):
         players = list(self.players.all())
@@ -140,13 +133,7 @@ class UserProfile(models.Model):
         return (won_matches, matches)
 
     def get_ranking(self, ranking_board):
-        # ranking = Ranking.objects.filter(player__id=self.user.id).filter(board=ranking_board)[0]
         ranking = Ranking.objects.filter(player__id=self.user.id).filter(board=ranking_board)[0]
-        # ranking = Ranking.objects.filter(player__id=self.user.id).filter(board=ranking_board)
-        # if ranking:
-        #     ranking = ranking[0]
-        # else:
-        #     ranking = None
         return ranking
 
     # def get_all_challenges(self):
@@ -164,10 +151,42 @@ class UserProfile(models.Model):
         return desc
 
 
+
+
+########################################################
+#  SIGNALS
+########################################################
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+
 post_save.connect(create_user_profile, sender=User)
 
 
+def rankingboard_pre_save(sender, instance, **kwargs):
+    if instance.pk:
+        instance._old_m2m = set(list(instance.players.values_list('pk', flat=True)))
+    else:
+        instance._old_m2m = set(list())
 
+pre_save.connect(rankingboard_pre_save, sender=RankingBoard)
+
+
+def rankingboard_players_changed(sender, instance, action, pk_set, **kwargs):
+    if action == "post_add":
+        added_players = User.objects.filter(pk__in = list(pk_set.difference(instance._old_m2m)))
+        deleted_players = User.objects.filter(pk__in = list(instance._old_m2m.difference(pk_set)))
+
+        if added_players or deleted_players:
+            for player in added_players:
+                # print 'Adding: ' + str(player)
+                if not Ranking.objects.filter(player__id=player.id).filter(board=instance):
+                    Ranking.objects.create(player=player, board=instance).save()
+
+            for player in deleted_players:
+                # print 'Removing: ' + str(player)
+                for ranking in Ranking.objects.filter(player__id=player.id).filter(board=instance):
+                    ranking.delete()
+
+m2m_changed.connect(rankingboard_players_changed, sender=RankingBoard.players.through)

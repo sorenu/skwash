@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block container %}
+    <h2>Ranking Boards</h2>
+    <ul>
+        {% for board in object_list %}
+            <li>
+                <a href='/rankingboards/{{ board.id }}'>{{ board.title }}</a> 
+                {% if user.id == board.owner.id %} <a href='/rankingboards/edit/{{ board.id }}'>edit</a> {% endif %}
+                <a href='/rankingboards/delete/{{ board.id }}'>delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href='/rankingboards/new/'>New Ranking Board</a>
+{% endblock %}
