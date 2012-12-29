@@ -35,6 +35,7 @@ class Ranking(models.Model):
 
 
 class MatchChallenge(models.Model):
+    STATUS_PLAYED = 2
     STATUS_ACCEPTED = 1
     STATUS_PENDING = 0
     STATUS_DECLINED = -1
@@ -42,7 +43,7 @@ class MatchChallenge(models.Model):
     ranking_board = models.ForeignKey(RankingBoard)
     challenger = models.ForeignKey(User, related_name='challenges_sent')
     challengee = models.ForeignKey(User, related_name='challenges_received')
-    status = models.IntegerField() # -1 declined, 0 pending, 1 accepted
+    status = models.IntegerField()
 
     def decline(self, declined_by):
         if declined_by.id == self.challengee.id:
@@ -89,11 +90,6 @@ class Match(models.Model):
     challenge = models.OneToOneField(MatchChallenge)
     winner = models.ForeignKey(User, blank=True, null=True)
 
-    # @property
-    # def winner(self):
-    #     return self._winner
-
-    # @winner.setter
     def set_winner(self, winner):
         p1 = self.challenge.challenger
         p2 = self.challenge.challengee
@@ -101,6 +97,8 @@ class Match(models.Model):
         score = self.elo(winner, loser, self.challenge.ranking_board)
         self.winner = winner
         # self.challenge.delete()
+        self.challenge.status = MatchChallenge.STATUS_PLAYED
+        self.challenge.save()
         self.save()
         return score
 

@@ -15,7 +15,7 @@ class MatchForm(forms.ModelForm):
 
     class Meta:
         model = Match
-        fields = ('_winner', 'challenge')
+        fields = ('winner', 'challenge')
         widgets = {
             'challenge': HiddenInput(),
         }

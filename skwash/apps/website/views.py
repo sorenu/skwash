@@ -80,7 +80,7 @@ def profile(request):
 @login_required
 def play_match(request, ranking_board_id, opponent_id):
     user = request.user
-    match = Match.objects.filter((Q(challenge__challenger_id=user.id) & Q(challenge__challengee_id=opponent_id)) | (Q(challenge__challengee_id=user.id) & Q(challenge__challenger_id=opponent_id))).filter(challenge__ranking_board_id=ranking_board_id) 
+    match = Match.objects.filter((Q(challenge__challenger_id=user.id) & Q(challenge__challengee_id=opponent_id)) | (Q(challenge__challengee_id=user.id) & Q(challenge__challenger_id=opponent_id))).filter(challenge__ranking_board_id=ranking_board_id).exclude(challenge__status=MatchChallenge.STATUS_PLAYED).exclude(challenge__status=MatchChallenge.STATUS_DECLINED)
     if match:
         match = match[0]
     else:
@@ -95,7 +95,7 @@ def play_match(request, ranking_board_id, opponent_id):
             return redirect('/')
     else:
         form = MatchForm(instance=match)
-        form.fields['_winner'].queryset = User.objects.filter(id__in=[match.challenge.challenger_id, match.challenge.challengee_id])
+        form.fields['winner'].queryset = User.objects.filter(id__in=[match.challenge.challenger_id, match.challenge.challengee_id])
     return render(request, 'website/match_form.html', {'form': form})
 
 

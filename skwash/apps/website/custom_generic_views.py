@@ -41,6 +41,7 @@ class ProtectedRankingBoardListView(ListView):
                 challenges_sent[c.ranking_board_id].append(c.challengee_id)
             elif c.status == MatchChallenge.STATUS_ACCEPTED:
                 challenges_accepted[c.ranking_board_id].append(c.challengee_id)
+                print c
 
         context['challenges_received'] = challenges_received
         context['challenges_sent'] = challenges_sent
