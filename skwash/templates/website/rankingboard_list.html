@@ -4,19 +4,26 @@
 
 <div class="row">
 
-    <div class="span3 bs-docs-sidebar" >
-        <ul class="nav nav-list bs-docs-sidenav" data-spy="affix" data-offset-top="0">
+    <div class="span3 bs-docs-sidebar">
+        <div class="row" data-spy="affix" data-offset-top="0">
+        <ul class="nav nav-list bs-docs-sidenav spy-list">
+            <li class="nav-header">Ranking Boards</li>
             {% for board in object_list %}
                 <li>
-                <a href='#{{ board.title }}_{{ board.id }}'><i class="icon-chevron-right"></i>{{ board.title }}</a>
+                <a href='#section_{{ board.id }}'><i class="icon-chevron-right"></i>{{ board.title }}</a>
                 </li>
             {% endfor %}
         </ul>
+        <ul class="nav nav-list bs-docs-sidenav spy-list">
+            <li class="nav-header">Create</li>
+            <li><a href="/rankingboards/new/">New Ranking Board</a></li>
+        </ul>
+        </div>
     </div>
     <div class="span9">
         {% for board in object_list %}
-            <!-- <div class="hero-unit"> -->
-            <section id="{{ board.title }}_{{ board.id }}">
+            <!-- <div class="hero-unit" id="section_{{ board.id }}"> -->
+            <section id="section_{{ board.id }}">
                 <div class='rankingboard-container'>
                     <a href='/rankingboards/{{ board.id }}'>{{ board.title }}</a>
                     <br/>
