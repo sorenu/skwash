@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import logout_then_login
 from django.views.generic.create_update import create_object, update_object, delete_object
 from skwash.apps.website.forms import RankingBoardForm
-from skwash.apps.website.models import RankingBoard
+from skwash.apps.website.models import RankingBoard, MatchChallenge
 
 
 def logout(request):
@@ -71,6 +71,13 @@ def delete_ranking_board(request, ranking_board_id):
 @login_required
 def profile(request):
     return render(request, 'website/player_detail.html')
+
+
+@login_required
+def play_match(request, challenge_id, ranking_board_id):
+    match = 
+
+
 
 
 

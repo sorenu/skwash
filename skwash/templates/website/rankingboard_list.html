@@ -2,15 +2,16 @@
 
 {% block container %}
 
-<div class="row">
+{% load keyvalue %}
 
+<div class="row">
     <div class="span3 bs-docs-sidebar">
-        <div class="row" data-spy="affix" data-offset-top="0">
+        <div class="row sidenav-container" data-spy="affix" data-offset-top="0">
         <ul class="nav nav-list bs-docs-sidenav spy-list">
             <li class="nav-header">Ranking Boards</li>
             {% for board in object_list %}
                 <li>
-                <a href='#section_{{ board.id }}'><i class="icon-chevron-right"></i>{{ board.title }}</a>
+                <a href='#section{{ board.id }}'><i class="icon-chevron-right"></i>{{ board.title }}</a>
                 </li>
             {% endfor %}
         </ul>
@@ -21,9 +22,9 @@
         </div>
     </div>
     <div class="span9">
-        {% for board in object_list %}
-            <!-- <div class="hero-unit" id="section_{{ board.id }}"> -->
-            <section id="section_{{ board.id }}">
+        {% for board in ranking_boards %}
+            <div class="hero-unit" id="section{{ board.id }}">
+            <!-- <section id="section_{{ board.id }}"> -->
                 <div class='rankingboard-container'>
                     <a href='/rankingboards/{{ board.id }}'>{{ board.title }}</a>
                     <br/>
@@ -33,13 +34,44 @@
                     <p>Ranking:
                     <ul>
                     {% for player in board.ranked_players %}
-                        <li>{{ player.0 }} ({{ player.1 }}) {% if user.id != player.0.id %} <a href="">Challenge</a> {% endif %} </li>
+                        <li>{{ player.0 }} ({{ player.1 }}) 
+                            {% if user.id != player.0.id %}
+
+                                {% if player.0.id in challenges_received|keyvalue:board.id %}
+                                    <a class="btn-challenge btn-challenge-accept" 
+                                       id="btn-challenge-accept__{{ board.id }}_{{ player.0.id }}" 
+                                       href="">Accept challenge</a> 
+                                    / 
+                                    <a class="btn-challenge btn-challenge-decline" 
+                                       id="btn-challenge-decline__{{ board.id }}_{{ player.0.id }}" 
+                                       href="">Decline challenge</a>
+                                {% else %}
+                                    {% if player.0.id in challenges_sent|keyvalue:board.id %}
+                                        <a class="btn-challenge btn-challenge-cancel" 
+                                           id="btn-challenge-cancel__{{ board.id }}_{{ player.0.id }}" 
+                                           href="">Cancel challenge</a>
+                                    {% else %}
+                                        {% if player.0.id in challenges_accepted|keyvalue:board.id %}
+                                            <a class="btn-challenge btn-challenge-play" 
+                                               id="btn-challenge-play__{{ board.id }}_{{ player.0.id }}" 
+                                               href="">Play match</a>
+                                        {% else %}
+                                            <a class="btn-challenge btn-challenge-challenge" 
+                                               id="btn-challenge-challenge__{{ board.id }}_{{ player.0.id }}"
+                                               href="">Challenge</a>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            
+                            {% endif %}
+                        </li>
                     {% endfor %}
                     </ul>
                     </p>
                 </div><!--/rankingboard-container-->
-            </section><!--/section-->
-            <!-- </div> -->
+            <!-- </section> -->
+            <!--/section-->
+            </div>
         {% endfor %}
     </div>
 </div>

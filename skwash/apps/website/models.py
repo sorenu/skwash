@@ -62,6 +62,14 @@ class MatchChallenge(models.Model):
         else:
             raise Exception('Only the challengee can accept a challenge!')
 
+    def verbose_status(self):
+        if self.status == self.STATUS_ACCEPTED:
+            return 'Accepted'
+        if self.status == self.STATUS_PENDING:
+            return 'Pending'
+        if self.status == self.STATUS_DECLINED:
+            return 'Declined'
+
     def __unicode__(self):
         desc = 'Challenger: %s' % (self.challenger)
         desc += '\nChallengee: %s' % (self.challengee)
@@ -82,6 +90,7 @@ class Match(models.Model):
         score = self.elo(winner, loser, self.challenge.ranking_board)
         self.winner = winner
         self.save()
+        self.challenge.delete()
 
         return score
 
@@ -109,6 +118,18 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)   # This field is required.
 
     def challenge(self, opponent, ranking_board):
+        # TODO[sdu]: If there is already a challenge proposed by the opponent, accept the challenge in stead of creating a new
+        mc = MatchChallenge.objects.filter(ranking_board=ranking_board).filter(challenger=self.user).filter(challengee=opponent).filter(status=MatchChallenge.STATUS_PENDING)
+        if mc:
+            # We don't want to create a duplicate challenge
+            return mc[0]
+
+        mc = MatchChallenge.objects.filter(ranking_board=ranking_board).filter(challengee=self.user).filter(challenger=opponent).filter(status=MatchChallenge.STATUS_PENDING)
+        if mc:
+            # If there is already a challenge proposed by the opponent, accept the challenge in stead of creating a new
+            mc[0].accept(self.user)
+            return mc[0]
+
         mc = MatchChallenge.objects.create(ranking_board=ranking_board, challenger=self.user, challengee=opponent, status=MatchChallenge.STATUS_PENDING)
         mc.save()
         return mc
@@ -136,10 +157,10 @@ class UserProfile(models.Model):
         ranking = Ranking.objects.filter(player__id=self.user.id).filter(board=ranking_board)[0]
         return ranking
 
-    # def get_all_challenges(self):
-    #     challenges = list(self.user.challenges_received.all())
-    #     challenges += list(self.user.challenges_sent.all())
-    #     return challenges
+    def get_all_challenges(self):
+        challenges = list(self.user.challenges_received.all())
+        challenges += list(self.user.challenges_sent.all())
+        return challenges
 
 
     def __unicode__(self):

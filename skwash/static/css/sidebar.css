@@ -22,8 +22,9 @@
   border: 1px solid #e5e5e5;
 }
 
-.bs-docs-sidenav > li > .nav-header {
-    text-align: center;
+.bs-docs-sidenav > li.nav-header {
+    /*text-align: center;*/
+    margin: 0px;
 }
 
 .bs-docs-sidenav > li:first-child > a {
@@ -88,6 +89,10 @@
   .bs-docs-sidenav {
     width: 258px;
   }
+  .sidenav-container {
+    width: 258px; 
+    margin-left: 0px !important;
+  }
   .bs-docs-sidenav > li > a {
     width: 230px \9; /* Override the previous IE8-9 hack */
   }
@@ -136,6 +141,12 @@
     margin-bottom: 20px;
   }
   .bs-docs-sidenav.affix {
+    position: static;
+    width: auto;
+    top: 0;
+  }
+
+  .sidenav-container.affix {
     position: static;
     width: auto;
     top: 0;

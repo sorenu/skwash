@@ -48,6 +48,7 @@
 
             <ul class="nav">
               <li class="{% active request '^/$' %} {% active request '^/ranking.*' %}"><a href="/">Rankings</a></li>
+              <li class="{% active request '^/challenges.*' %}"><a href="/challenges">Challenges</a></li>
               <li class="{% active request '^/profile/$' %}"><a href="/profile">{{ user }}</a></li>
             </ul>
             <p class="navbar-text pull-right">
