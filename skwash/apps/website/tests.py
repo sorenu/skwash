@@ -38,7 +38,7 @@ class RankingBoardTest(TestCase):
         
         self.player2.get_profile().challenge(self.player1, self.ranking_board)
         self.player3.get_profile().challenge(self.player1, self.ranking_board)
-        self.player4.get_profile().challenge(self.player1, self.ranking_board)
+        # self.player4.get_profile().challenge(self.player1, self.ranking_board)
         self.player1.get_profile().challenge(self.player4, self.ranking_board)
         
         # Just some extra data to test that the model does not get confused
@@ -47,9 +47,10 @@ class RankingBoardTest(TestCase):
         self.ranking_board2.players.add(self.player2)
         self.ranking_board2.players.add(self.player3)
         self.ranking_board2.players.add(self.player4)
+
         self.player2.get_profile().challenge(self.player1, self.ranking_board2)
         self.player3.get_profile().challenge(self.player1, self.ranking_board2)
-        self.player4.get_profile().challenge(self.player1, self.ranking_board2)
+        # self.player4.get_profile().challenge(self.player1, self.ranking_board2)
         self.player1.get_profile().challenge(self.player4, self.ranking_board2)
 
 
@@ -139,8 +140,12 @@ class RankingBoardTest(TestCase):
             p1 = self.players[0]
             p2 = self.players[1]
             ps = [p1,p2]
+            print p1, p2
             c = p1.get_profile().challenge(p2, self.ranking_board)
-            m = c.accept(p2)
+            if c.status == MatchChallenge.STATUS_PENDING:
+                m = c.accept(p2)
+            else:
+                m = c.match
             winner = ps[random.randint(0,1)]
             ps.remove(winner)
             loser = ps[0]

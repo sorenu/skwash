@@ -87,21 +87,21 @@ MAX_INCREASE = 32
 
 class Match(models.Model):
     challenge = models.OneToOneField(MatchChallenge)
-    _winner = models.ForeignKey(User, blank=True, null=True)
+    winner = models.ForeignKey(User, blank=True, null=True)
 
-    @property
-    def winner(self):
-        return self._winner
+    # @property
+    # def winner(self):
+    #     return self._winner
 
-    @winner.setter
-    def winner(self, winner):
+    # @winner.setter
+    def set_winner(self, winner):
         p1 = self.challenge.challenger
         p2 = self.challenge.challengee
         loser = p1 if winner.id == p2.id else p2
         score = self.elo(winner, loser, self.challenge.ranking_board)
-        self._winner = winner
-        self.challenge.delete()
-
+        self.winner = winner
+        # self.challenge.delete()
+        self.save()
         return score
 
     def elo(self, winner, loser, ranking_board):
@@ -128,7 +128,6 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)   # This field is required.
 
     def challenge(self, opponent, ranking_board):
-        # TODO[sdu]: If there is already a challenge proposed by the opponent, accept the challenge in stead of creating a new
         mc = MatchChallenge.objects.filter(ranking_board=ranking_board).filter(challenger=self.user).filter(challengee=opponent).filter(status=MatchChallenge.STATUS_PENDING)
         if mc:
             # We don't want to create a duplicate challenge

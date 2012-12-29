@@ -90,7 +90,7 @@ def play_match(request, ranking_board_id, opponent_id):
         form = MatchForm(request.POST, instance=match)
         if form.is_valid():
             match = form.save(commit = False)
-            match.winner = match._winner
+            match.set_winner(match.winner)
             match.save()
             return redirect('/')
     else:
