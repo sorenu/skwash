@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
-from skwash.apps.website.models import RankingBoard, MatchChallenge
+from skwash.apps.website.models import RankingBoard, MatchChallenge, Match
 
 
 class ProtectedRankingBoardListView(ListView):
@@ -58,7 +58,7 @@ class ProtectedRankingBoardDetailView(DetailView):
 
 
 class ProtectedChallengesListView(ListView):
-    template_name = 'website/challenges_list.html'
+    template_name = 'website/matchchallenge_list.html'
     context_object_name = 'match_challenges'
 
     @method_decorator(login_required)
@@ -71,4 +71,16 @@ class ProtectedChallengesListView(ListView):
         return MatchChallenge.objects.filter(Q(challenger=user) | Q(challengee=user))
 
 
+# class ProtectedMatchDetailView(DetailView):
+#     model = Match
+#     template_name = 'website/match_detail.html'
+    
+#     @method_decorator(login_required)
+#     def dispatch(self, *args, **kwargs):
+#         return super(ProtectedMatchDetailView, self).dispatch(*args, **kwargs)
+
+#     def get_queryset(self):
+#         user = self.request.user
+#         print dir(self.request)
+#         return Match.objects.all()
 

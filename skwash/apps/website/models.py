@@ -62,6 +62,12 @@ class MatchChallenge(models.Model):
         else:
             raise Exception('Only the challengee can accept a challenge!')
 
+    def cancel(self, cancelled_by):
+        if cancelled_by.id == self.challenger.id:
+            self.delete()
+        else:
+            raise Exception('Only the challenger can cancel a challenge!')
+
     def verbose_status(self):
         if self.status == self.STATUS_ACCEPTED:
             return 'Accepted'
@@ -81,15 +87,19 @@ MAX_INCREASE = 32
 
 class Match(models.Model):
     challenge = models.OneToOneField(MatchChallenge)
-    winner = models.ForeignKey(User, blank=True, null=True)
+    _winner = models.ForeignKey(User, blank=True, null=True)
 
-    def set_winner(self, winner):
+    @property
+    def winner(self):
+        return self._winner
+
+    @winner.setter
+    def winner(self, winner):
         p1 = self.challenge.challenger
         p2 = self.challenge.challengee
         loser = p1 if winner.id == p2.id else p2
         score = self.elo(winner, loser, self.challenge.ranking_board)
-        self.winner = winner
-        self.save()
+        self._winner = winner
         self.challenge.delete()
 
         return score
@@ -211,3 +221,10 @@ def rankingboard_players_changed(sender, instance, action, pk_set, **kwargs):
                     ranking.delete()
 
 m2m_changed.connect(rankingboard_players_changed, sender=RankingBoard.players.through)
+
+
+# def match_post_save(sender, instance, created, **kwargs):
+#     if created:
+#         UserProfile.objects.create(user=instance)
+
+# post_save.connect(match_post_save, sender=Match)
