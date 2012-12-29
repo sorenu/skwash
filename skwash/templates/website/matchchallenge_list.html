@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block container %}
+{% for challenge in match_challenges %}
+    <div>{{ challenge.challenger }} challenged {{ challenge.challengee }} ({{ challenge.verbose_status }})</div>
+{% endfor %}
+{% endblock %}
