@@ -10,6 +10,8 @@
 
     <!-- Le styles -->
     <link href="{{ STATIC_URL }}ext/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/sidebar.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/rankingboard.css" rel="stylesheet">
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -30,7 +32,7 @@
                                    <link rel="shortcut icon" href="{{ STATIC_URL }}ext/bootstrap/ico/favicon.png">
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#spy-list">
 
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
@@ -43,13 +45,15 @@
           {% load tags %}
           <a class="brand" href="/">Skwash</a>
           <div class="nav-collapse collapse">
+
             <ul class="nav">
-              <!-- <li class="active"><a href="/">{{ user }}</a></li> -->
               <li class="{% active request '^/$' %} {% active request '^/ranking.*' %}"><a href="/">Rankings</a></li>
               <li class="{% active request '^/profile/$' %}"><a href="/profile">{{ user }}</a></li>
-              <li><a href="/accounts/logout">Logout</a></li>
             </ul>
-          </div><!--/.nav-collapse -->
+            <p class="navbar-text pull-right">
+              <a href="/accounts/logout" class="navbar-link">Logout</a>
+              </p>
+          </div>
         </div>
       </div>
     </div>

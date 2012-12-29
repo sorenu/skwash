@@ -1,16 +1,40 @@
 {% extends "base.html" %}
 
 {% block container %}
-    <h2>Ranking Boards</h2>
-    <ul>
-        {% for board in object_list %}
-            <li>
-                <a href='/rankingboards/{{ board.id }}'>{{ board.title }}</a> 
-                {% if user.id == board.owner.id %} <a href='/rankingboards/edit/{{ board.id }}'>edit</a> {% endif %}
-                <a href='/rankingboards/delete/{{ board.id }}'>delete</a>
-            </li>
-        {% endfor %}
-    </ul>
 
-    <a href='/rankingboards/new/'>New Ranking Board</a>
+<div class="row">
+
+    <div class="span3 bs-docs-sidebar" >
+        <ul class="nav nav-list bs-docs-sidenav" data-spy="affix" data-offset-top="0">
+            {% for board in object_list %}
+                <li>
+                <a href='#{{ board.title }}_{{ board.id }}'><i class="icon-chevron-right"></i>{{ board.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="span9">
+        {% for board in object_list %}
+            <!-- <div class="hero-unit"> -->
+            <section id="{{ board.title }}_{{ board.id }}">
+                <div class='rankingboard-container'>
+                    <a href='/rankingboards/{{ board.id }}'>{{ board.title }}</a>
+                    <br/>
+                    {% if user.id == board.owner.id %} <a href='/rankingboards/edit/{{ board.id }}'>edit</a> {% endif %}
+                    <a href='/rankingboards/delete/{{ board.id }}'>delete</a>
+                    <p>Owner: {{ board.owner }}</p>
+                    <p>Ranking:
+                    <ul>
+                    {% for player in board.ranked_players %}
+                        <li>{{ player.0 }} ({{ player.1 }}) {% if user.id != player.0.id %} <a href="">Challenge</a> {% endif %} </li>
+                    {% endfor %}
+                    </ul>
+                    </p>
+                </div><!--/rankingboard-container-->
+            </section><!--/section-->
+            <!-- </div> -->
+        {% endfor %}
+    </div>
+</div>
+          
 {% endblock %}
