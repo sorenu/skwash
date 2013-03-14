@@ -76,6 +76,8 @@ class MatchChallenge(models.Model):
             return 'Pending'
         if self.status == self.STATUS_DECLINED:
             return 'Declined'
+        if self.status == self.STATUS_PLAYED:
+            return 'Played'
 
     def __unicode__(self):
         desc = 'Challenger: %s' % (self.challenger)

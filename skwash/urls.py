@@ -8,7 +8,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     (r'^accounts/logout/$', 'skwash.apps.website.views.logout'),
-    (r'^accounts/', include('registration.backends.default.urls')),
+    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    # (r'^accounts/', include('registration.backends.default.urls')),
     (r'', include('skwash.apps.website.urls')),
 )
 
