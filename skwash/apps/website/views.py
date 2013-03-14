@@ -8,6 +8,7 @@ from skwash.apps.website.form_views import RankingBoardCreate, RankingBoardUpdat
 from skwash.apps.website.models import RankingBoard, MatchChallenge, Match
 from skwash.apps.website.view_helpers import get_received_match_challenge, get_sent_match_challenge
 from django.db.models import Q
+from django.views.generic import TemplateView
 
 
 def logout(request):
@@ -46,7 +47,7 @@ def new_challenge(request, ranking_board_id, opponent_id):
     opponent = User.objects.get(id=opponent_id)
     board = RankingBoard.objects.get(id=ranking_board_id)
     request.user.get_profile().challenge(opponent, board)
-    return redirect('/')
+    return challenge_button_cancel(request, ranking_board_id, opponent_id)
 
 
 @login_required
@@ -55,7 +56,7 @@ def accept_challenge(request, ranking_board_id, opponent_id):
     if not mc:
         return HttpResponseNotFound()
     mc.accept(request.user)
-    return redirect('/')
+    return challenge_button_play(request, ranking_board_id, opponent_id)
 
 
 @login_required
@@ -64,7 +65,7 @@ def decline_challenge(request, ranking_board_id, opponent_id):
     if not mc:
         return HttpResponseNotFound()
     mc.decline(request.user)
-    return redirect('/')
+    return challenge_button_challenge(request, ranking_board_id, opponent_id)
 
 
 @login_required
@@ -73,6 +74,21 @@ def cancel_challenge(request, ranking_board_id, opponent_id):
     if not mc:
         return HttpResponseNotFound()
     mc.cancel(request.user)
-    return redirect('/')
+    return challenge_button_challenge(request, ranking_board_id, opponent_id)
+
+
+def challenge_button_cancel(request, ranking_board_id, opponent_id):
+    return render(request, 'website/challenge_buttons/challenge_button_cancel.html', {'board_id': ranking_board_id, 'opponent_id': opponent_id})
+
+def challenge_button_challenge(request, ranking_board_id, opponent_id):
+    return render(request, 'website/challenge_buttons/challenge_button_challenge.html', {'board_id': ranking_board_id, 'opponent_id': opponent_id})
+
+def challenge_button_play(request, ranking_board_id, opponent_id):
+    return render(request, 'website/challenge_buttons/challenge_button_play.html', {'board_id': ranking_board_id, 'opponent_id': opponent_id})
+
+def challenge_button_received(request, ranking_board_id, opponent_id):
+    return render(request, 'website/challenge_buttons/challenge_button_received.html', {'board_id': ranking_board_id, 'opponent_id': opponent_id})
+
+
 
 

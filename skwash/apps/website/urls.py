@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.core.urlresolvers import reverse
 from skwash.apps.website.custom_generic_views import ProtectedRankingBoardListView, ProtectedRankingBoardDetailView, ProtectedChallengesListView
 from skwash.apps.website.form_views import RankingBoardCreate, RankingBoardUpdate, RankingBoardDelete
+from django.views.generic import TemplateView
 
 urlpatterns = patterns('skwash.apps.website.views',
     (r'^$', ProtectedRankingBoardListView.as_view()),
@@ -19,4 +20,9 @@ urlpatterns = patterns('skwash.apps.website.views',
     (r'^challenges/(?P<ranking_board_id>\d+)/(?P<opponent_id>\d+)/cancel/$', 'cancel_challenge'),
 
     (r'^matches/(?P<ranking_board_id>\d+)/(?P<opponent_id>\d+)/play/$', 'play_match'),
+
+    (r'^challenge-button-state-cancel/(?P<ranking_board_id>\d+)/(?P<opponent_id>\d+)/$', 'challenge_button_cancel'),
+    (r'^challenge-button-state-challenge/(?P<ranking_board_id>\d+)/(?P<opponent_id>\d+)/$', 'challenge_button_challenge'),
+    (r'^challenge-button-state-play/(?P<ranking_board_id>\d+)/(?P<opponent_id>\d+)/$', 'challenge_button_play'),    
+    (r'^challenge-button-state-received/(?P<ranking_board_id>\d+)/(?P<opponent_id>\d+)/$', 'challenge_button_received')
 )
