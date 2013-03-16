@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "skwash_base.html" %}
 
 {% block container %}
 
@@ -37,32 +37,13 @@
                     <a href='/rankingboards/delete/{{ board.id }}'>delete</a>
                     <p>Owner: {{ board.owner }}</p>
                     <p>Ranking:
-                    <ol>
-                    {% for player in board.ranked_players %}
-                        <li>{{ player.0 }} ({{ player.1 }}) 
-                            {% if user.id != player.0.id %}
+                    
+                    <section class='board-container rankingboards/html/{{ board.id }}'>
 
+                    
 
-                            <span class='challenge-buttons-container 
-                                {% if player.0.id in challenges_received|keyvalue:board.id %}
-                                    challenge-button-state-received__{{ board.id }}_{{ player.0.id }}
-                                {% else %}
-                                    {% if player.0.id in challenges_sent|keyvalue:board.id %}
-                                        challenge-button-state-cancel__{{ board.id }}_{{ player.0.id }}
-                                    {% else %}
-                                        {% if player.0.id in challenges_accepted|keyvalue:board.id %}
-                                            challenge-button-state-play__{{ board.id }}_{{ player.0.id }}
-                                        {% else %}
-                                            challenge-button-state-challenge__{{ board.id }}_{{ player.0.id }}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
-                            '></span>
-                            
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                    </ol>
+                    </section>
+
                     </p>
                 </div><!--/rankingboard-container-->
             <!-- </section> -->

@@ -1,0 +1,12 @@
+
+<div class='match-play-header'>How did it go?</div>
+
+<section class='match-play-button-container'>
+
+<button class="btn btn-large btn-primary btn-match-play-result" 
+        href='/matches/{{ board_id }}/{{ opponent_id }}/{{ request.user.id }}/set_winner/'>I won</button>
+
+<button class="btn btn-large btn-primary btn-match-play-result" 
+        href='/matches/{{ board_id }}/{{ opponent_id }}/{{ opponent_id }}/set_winner/'>I lost</button>
+
+</section>

@@ -135,11 +135,12 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'compressor',
-    # 'coffeescript',
     'skwash.apps.website',
     'skwash.apps.skwash_core',
     'django.contrib.admin',
+    'registration'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -172,11 +173,15 @@ LOGGING = {
 }
 
 
-
-ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
 AUTH_PROFILE_MODULE = 'website.UserProfile'
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
+EMAIL_HOST_USER = 'sorendu@gmail.com'
+EMAIL_HOST_PASSWORD = 'M4ngotre3'
 
 ######### DJANGO COMPRESSOR #########
 COMPRESS_ENABLED = True

@@ -1,0 +1,29 @@
+{% load keyvalue %}
+
+<ol>
+{% for player in board.ranked_players %}
+    <li {% if request.user.id = player.0.id %} class='player-li' {% endif %} >{{ player.0 }} ({{ player.1 }}) 
+        {% if request.user.id != player.0.id %}
+
+        <span class='challenge-buttons-container 
+            {% if player.0.id in challenges_received|keyvalue:board.id %}
+                challenge-button-state-received__{{ board.id }}_{{ player.0.id }}
+            {% else %}
+                {% if player.0.id in challenges_sent|keyvalue:board.id %}
+                    challenge-button-state-cancel__{{ board.id }}_{{ player.0.id }}
+                {% else %}
+                    {% if player.0.id in challenges_accepted|keyvalue:board.id %}
+                        challenge-button-state-play__{{ board.id }}_{{ player.0.id }}
+                    {% else %}
+                        challenge-button-state-challenge__{{ board.id }}_{{ player.0.id }}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        '>
+        </span>
+        <div class='match-play-container'></div>
+
+        {% endif %}
+    </li>
+{% endfor %}
+</ol>

@@ -21,7 +21,7 @@ def profile(request):
 
 
 @login_required
-def play_match(request, ranking_board_id, opponent_id):
+def set_match_winner(request, ranking_board_id, opponent_id, winner_id):
     user = request.user
     match = Match.objects.filter((Q(challenge__challenger_id=user.id) & Q(challenge__challengee_id=opponent_id)) | (Q(challenge__challengee_id=user.id) & Q(challenge__challenger_id=opponent_id))).filter(challenge__ranking_board_id=ranking_board_id).exclude(challenge__status=MatchChallenge.STATUS_PLAYED).exclude(challenge__status=MatchChallenge.STATUS_DECLINED)
     if match:
@@ -29,17 +29,35 @@ def play_match(request, ranking_board_id, opponent_id):
     else:
         return HttpResponseNotFound()
 
-    if request.method == 'POST':
-        form = MatchForm(request.POST, instance=match)
-        if form.is_valid():
-            match = form.save(commit = False)
-            match.set_winner(match.winner)
-            match.save()
-            return redirect('/')
-    else:
-        form = MatchForm(instance=match)
-        form.fields['winner'].queryset = User.objects.filter(id__in=[match.challenge.challenger_id, match.challenge.challengee_id])
-    return render(request, 'website/match_form.html', {'form': form})
+    winner = User.objects.get(id=winner_id)
+    match.set_winner(winner)
+    return HttpResponse()
+
+
+@login_required
+def play_match(request, ranking_board_id, opponent_id):
+    return render(request, 'website/match_play.html', {'board_id': ranking_board_id, 'opponent_id': opponent_id})
+
+# @login_required
+# def play_match(request, ranking_board_id, opponent_id):
+#     user = request.user
+#     match = Match.objects.filter((Q(challenge__challenger_id=user.id) & Q(challenge__challengee_id=opponent_id)) | (Q(challenge__challengee_id=user.id) & Q(challenge__challenger_id=opponent_id))).filter(challenge__ranking_board_id=ranking_board_id).exclude(challenge__status=MatchChallenge.STATUS_PLAYED).exclude(challenge__status=MatchChallenge.STATUS_DECLINED)
+#     if match:
+#         match = match[0]
+#     else:
+#         return HttpResponseNotFound()
+
+#     if request.method == 'POST':
+#         form = MatchForm(request.POST, instance=match)
+#         if form.is_valid():
+#             match = form.save(commit = False)
+#             match.set_winner(match.winner)
+#             match.save()
+#             return redirect('/')
+#     else:
+#         form = MatchForm(instance=match)
+#         form.fields['winner'].queryset = User.objects.filter(id__in=[match.challenge.challenger_id, match.challenge.challengee_id])
+#     return render(request, 'website/match_form.html', {'form': form})
 
 
 @login_required
@@ -89,6 +107,41 @@ def challenge_button_play(request, ranking_board_id, opponent_id):
 def challenge_button_received(request, ranking_board_id, opponent_id):
     return render(request, 'website/challenge_buttons/challenge_button_received.html', {'board_id': ranking_board_id, 'opponent_id': opponent_id})
 
+def ranking_board_html(request, board_id):
+    board = RankingBoard.objects.get(id=board_id)
+    if not board:
+        return HttpResponseNotFound()
+    context = get_board_context({'board': board}, request)
+    return render(request, 'website/board.html', context)
 
+
+def get_board_context(context, request):
+    user = request.user
+    challenges_accepted = {}
+    challenges_received = {}
+    for c in user.challenges_received.all():
+        challenges_received.setdefault(c.ranking_board_id, [])
+        challenges_accepted.setdefault(c.ranking_board_id, [])
+        if c.status == MatchChallenge.STATUS_PENDING:
+            challenges_received[c.ranking_board_id].append(c.challenger_id)
+        elif c.status == MatchChallenge.STATUS_ACCEPTED:
+            challenges_accepted[c.ranking_board_id].append(c.challenger_id)
+
+    challenges_sent = {}
+    for c in user.challenges_sent.all():
+        challenges_sent.setdefault(c.ranking_board_id, [])
+        challenges_accepted.setdefault(c.ranking_board_id, [])
+        # challenges_sent[c.ranking_board_id].append(c.challengee_id)
+        if c.status == MatchChallenge.STATUS_PENDING:
+            challenges_sent[c.ranking_board_id].append(c.challengee_id)
+        elif c.status == MatchChallenge.STATUS_ACCEPTED:
+            challenges_accepted[c.ranking_board_id].append(c.challengee_id)
+            print c
+
+    context['challenges_received'] = challenges_received
+    context['challenges_sent'] = challenges_sent
+    context['challenges_accepted'] = challenges_accepted
+
+    return context
 
 
