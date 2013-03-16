@@ -176,12 +176,7 @@ LOGGING = {
 AUTH_PROFILE_MODULE = 'website.UserProfile'
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'sorendu@gmail.com'
-EMAIL_HOST_PASSWORD = 'M4ngotre3'
 
 ######### DJANGO COMPRESSOR #########
 COMPRESS_ENABLED = True
@@ -190,3 +185,9 @@ COMPRESS_PRECOMPILERS = (
     ('text/coffeescript', 'coffee --compile --stdio'),
     ('text/less', 'lessc {infile} {outfile}'),
 )
+
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
