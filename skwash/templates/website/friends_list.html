@@ -17,7 +17,7 @@
 {% for req in buddy_requests %}
 
     <div class='buddy-request-row span4'>
-    {% gravatar_img_for_user req.from_user 30 %}{{ req.from_user }} <button class="btn btn-medium btn-primary btn-accept-buddy" 
+    <a href='/profile/{{ req.from_user.username|urlencode }}'>{% gravatar_img_for_user req.from_user 30 %}{{ req.from_user }}</a> <button class="btn btn-medium btn-primary btn-accept-buddy" 
                 href='/buddies/{{ req.id }}/accept'>Accept</button>
     </div>
 {% endfor %}
@@ -33,7 +33,7 @@
 {% for friend in all_friends %}
 
     <div class='buddy-request-row span4'>
-{% gravatar_img_for_user friend 30 %}{{ friend.username }}
+<a href='/profile/{{ friend.username|urlencode }}'>{% gravatar_img_for_user friend 30 %}{{ friend.username }}</a>
     </div>
 
 {% endfor %}

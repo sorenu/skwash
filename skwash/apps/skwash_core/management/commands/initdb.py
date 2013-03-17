@@ -38,6 +38,8 @@ class Command(BaseCommand):
 
         self.players = [self.player1, self.player2, self.player3, self.player4, self.player5, self.player6, self.player7, self.player8, self.player9, self.player10, self.player11, self.player12, self.player13, self.player14, self.player15, self.player16, self.player17, self.player18, self.player19, self.player20, self.player21, self.player22]
 
+        self.shapes = [self.player7, self.player8, self.player9, self.player10, self.player11, self.player12, self.player13, self.player14, self.player15, self.player16, self.player17, self.player18, self.player19]
+
         self.ranking_board1 = RankingBoard.objects.create(owner=self.player1, title='League by 10')
         self.ranking_board2 = RankingBoard.objects.create(owner=self.player3, title='League by 30')
         self.ranking_board3 = RankingBoard.objects.create(owner=self.player4, title='League by 40')
@@ -87,11 +89,12 @@ class Command(BaseCommand):
         self.player4.get_profile().challenge(self.player5, self.ranking_board1)
 
 
-        for friend in self.players:
-            for friend1 in self.players:
+        for friend in self.shapes:
+            for friend1 in self.shapes:
                 try:
-                    new_relationship = Friend.objects.add_friend(friend, friend1)
-                    new_relationship.accept()
+                    if not friend == friend1 and not Friend.objects.are_friends(friend, friend1):
+                        new_relationship = Friend.objects.add_friend(friend, friend1)
+                        new_relationship.accept()
                 except:
                     pass
 

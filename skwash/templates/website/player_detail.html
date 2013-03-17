@@ -1,9 +1,14 @@
 {% extends "skwash_base.html" %}
 
+{% load gravatar %}
+
 {% block container %}
+
+{% gravatar_img_for_user profile_user 30 %} <br/> 
 
 username: {{ profile_user.username }}<br/>
 email: {{ profile_user.email }}<br/>
+
 
 
 <div id='add-buddy-container' class='add-buddy-container__{{ profile_user.id }}'>
