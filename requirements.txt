@@ -11,4 +11,4 @@ easy-thumbnails==1.2
 psycopg2==2.4.6
 six==1.2.0
 wsgiref==0.1.2
--e hg+https://bitbucket.org/trapeze/django-registration
+-e hg+https://bitbucket.org/trapeze/django-registration/#egg=django-registration
