@@ -1,0 +1,43 @@
+{% extends "skwash_base.html" %}
+
+{% load gravatar %}
+
+
+{% block container %}
+
+<input type="text" id="typeahead" class="span3" placeholder="Find buddies" data-provide="typeahead">    
+
+<div id='search-results-container'>
+</div>
+
+{% if buddy_requests %}
+<div class='row'>
+<h4 class="form-signin-heading">Buddy requests</h4>
+
+{% for req in buddy_requests %}
+
+    <div class='buddy-request-row span4'>
+    {% gravatar_img_for_user req.from_user 30 %}{{ req.from_user }} <button class="btn btn-medium btn-primary btn-accept-buddy" 
+                href='/buddies/{{ req.id }}/accept'>Accept</button>
+    </div>
+{% endfor %}
+</div>
+{% endif %}
+
+
+
+{% if all_friends %}
+<div class='row'>
+<h4 class="form-signin-heading">All your buddies</h4>
+
+{% for friend in all_friends %}
+
+    <div class='buddy-request-row span4'>
+{% gravatar_img_for_user friend 30 %}{{ friend.username }}
+    </div>
+
+{% endfor %}
+</div>  
+{% endif %}
+
+{% endblock %}

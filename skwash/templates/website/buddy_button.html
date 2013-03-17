@@ -1,0 +1,22 @@
+{% if profile_user = request.user %}
+
+{% else %}
+
+    {% if requested %}
+    <button class="btn btn-large btn-primary btn-add-buddy" 
+                href='/buddies/{{ profile_user.id }}/cancel'>Cancel buddy request</button>
+
+    {% else %}
+
+        {% if are_friends %}
+            <button class="btn btn-large btn-primary btn-add-buddy" 
+                        href='/buddies/{{ profile_user.id }}/remove'>Remove buddy</button>
+        {% else %}
+            <button class="btn btn-large btn-primary btn-add-buddy" 
+                        href='/buddies/{{ profile_user.id }}/add'>Add buddy</button>
+        {% endif %}
+
+
+    {% endif %}
+
+{% endif %}

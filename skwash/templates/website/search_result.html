@@ -1,0 +1,15 @@
+{% if result %}
+
+{% for user in result %}
+
+    email: {{ user.email }}<br/>
+    username: {{ user.username }}
+    
+    <br/><br/>
+{% endfor %}
+
+{% else %}
+
+this is not the buddy you are looking for
+
+{% endif %}
