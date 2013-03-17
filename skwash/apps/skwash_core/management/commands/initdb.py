@@ -87,27 +87,36 @@ class Command(BaseCommand):
         self.player4.get_profile().challenge(self.player5, self.ranking_board1)
 
 
-        new_relationship = Friend.objects.add_friend(self.player19, self.player10)
-        new_relationship.accept()
-        new_relationship = Friend.objects.add_friend(self.player19, self.player11)
-        new_relationship.accept()
-        new_relationship = Friend.objects.add_friend(self.player19, self.player13)
-        new_relationship.accept()
-        new_relationship = Friend.objects.add_friend(self.player20, self.player19)
-        new_relationship.accept()
-        new_relationship = Friend.objects.add_friend(self.player21, self.player19)
-        new_relationship.accept()
-        new_relationship = Friend.objects.add_friend(self.player22, self.player19)
-        new_relationship.accept()
+        for friend in self.players:
+            for friend1 in self.players:
+                try:
+                    new_relationship = Friend.objects.add_friend(friend, friend1)
+                    new_relationship.accept()
+                except:
+                    pass
 
-        new_relationship = Friend.objects.add_friend(self.player7, self.player19)
-        new_relationship = Friend.objects.add_friend(self.player16, self.player19)
+
+        # new_relationship = Friend.objects.add_friend(self.player19, self.player10)
+        # new_relationship.accept()
+        # new_relationship = Friend.objects.add_friend(self.player19, self.player11)
+        # new_relationship.accept()
+        # new_relationship = Friend.objects.add_friend(self.player19, self.player13)
+        # new_relationship.accept()
+        # new_relationship = Friend.objects.add_friend(self.player20, self.player19)
+        # new_relationship.accept()
+        # new_relationship = Friend.objects.add_friend(self.player21, self.player19)
+        # new_relationship.accept()
+        # new_relationship = Friend.objects.add_friend(self.player22, self.player19)
+        # new_relationship.accept()
+
+        # new_relationship = Friend.objects.add_friend(self.player7, self.player19)
+        # new_relationship = Friend.objects.add_friend(self.player16, self.player19)
         
-        new_relationship = Friend.objects.add_friend(self.player14, self.player19)
-        new_relationship = Friend.objects.add_friend(self.player12, self.player19)
-        new_relationship = Friend.objects.add_friend(self.player8, self.player19)
-        new_relationship = Friend.objects.add_friend(self.player9, self.player19)
-        new_relationship = Friend.objects.add_friend(self.player18, self.player19)
-        new_relationship = Friend.objects.add_friend(self.player17, self.player19)
+        # new_relationship = Friend.objects.add_friend(self.player14, self.player19)
+        # new_relationship = Friend.objects.add_friend(self.player12, self.player19)
+        # new_relationship = Friend.objects.add_friend(self.player8, self.player19)
+        # new_relationship = Friend.objects.add_friend(self.player9, self.player19)
+        # new_relationship = Friend.objects.add_friend(self.player18, self.player19)
+        # new_relationship = Friend.objects.add_friend(self.player17, self.player19)
 
 
