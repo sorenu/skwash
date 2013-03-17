@@ -33,8 +33,9 @@
                     <!-- <h3><a href='/rankingboards/{{ board.id }}'>{{ board.title }}</a></h3> -->
                     <h2>{{ board.title }}</h2>
                     <br/>
-                    {% if user.id == board.owner.id %} <a href='/rankingboards/{{ board.id }}'>edit</a> {% endif %}
+                    {% if user.id == board.owner.id %} <a href='/rankingboards/{{ board.id }}'>edit</a> 
                     <a href='/rankingboards/delete/{{ board.id }}'>delete</a>
+                    {% endif %}
                     <p>Owner: {{ board.owner }}</p>
                     <p>Ranking:
                     
