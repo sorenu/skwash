@@ -2,6 +2,12 @@
 
 {% block container %}
 
-{{ user }}
+username: {{ profile_user.username }}<br/>
+email: {{ profile_user.email }}<br/>
+
+
+<div id='add-buddy-container' class='add-buddy-container__{{ profile_user.id }}'>
+
+</div>
 
 {% endblock %}

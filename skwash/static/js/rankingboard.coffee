@@ -49,7 +49,7 @@ loadRankingBoard = (klass, element) ->
 
 
 for e in $('.board-container')
-    klass = e.classList.item(1)
+    klass = e.classList.item(1)    
     loadRankingBoard klass, e
 
 

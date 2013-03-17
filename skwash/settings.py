@@ -140,7 +140,9 @@ INSTALLED_APPS = (
     'skwash.apps.website',
     'skwash.apps.skwash_core',
     'django.contrib.admin',
-    'registration'
+    'registration',
+    'gravatar',
+    'friendship',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -175,7 +177,6 @@ LOGGING = {
 
 AUTH_PROFILE_MODULE = 'website.UserProfile'
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
-
 
 
 ######### DJANGO COMPRESSOR #########

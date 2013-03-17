@@ -9,6 +9,7 @@ from skwash.apps.website.models import RankingBoard, MatchChallenge, Match
 from skwash.apps.website.view_helpers import get_received_match_challenge, get_sent_match_challenge
 from django.db.models import Q
 from django.views.generic import TemplateView
+from friendship.models import Friend, FriendshipRequest
 
 
 def logout(request):
@@ -17,7 +18,79 @@ def logout(request):
 
 @login_required
 def profile(request):
-    return render(request, 'website/player_detail.html')
+    return render(request, 'website/player_detail.html', {'profile_user': request.user})
+
+def other_profile(request, username):
+    user = User.objects.get(username=username)
+    are_friends = Friend.objects.are_friends(request.user, user)
+    return render(request, 'website/player_detail.html', {'profile_user': user, 'are_friends': are_friends})    
+
+
+@login_required
+def friends_list(request):
+    buddy_requests = FriendshipRequest.objects.filter(to_user__id=request.user.id)
+    all_friends = Friend.objects.friends(request.user)
+    print all_friends
+    return render(request, 'website/friends_list.html', {'buddy_requests': buddy_requests, 'all_friends': all_friends})
+
+
+@login_required
+def friends_add(request, user_id):
+    other = User.objects.get(id=user_id)
+    try:
+        Friend.objects.add_friend(request.user, other)
+    except:
+        return HttpResponse()
+    return HttpResponse()
+
+
+@login_required
+def friends_remove(request, user_id):
+    other = User.objects.get(id=user_id)
+    try:
+        Friend.objects.remove_friend(request.user, other)
+    except:
+        return HttpResponse()
+    return HttpResponse()
+
+
+@login_required
+def friends_accept(request, request_id):
+    request = FriendshipRequest.objects.get(id=request_id)
+    request.accept()
+    return HttpResponse()
+
+
+@login_required
+def friends_cancel(request, user_id):
+    other = User.objects.get(id=user_id)
+    requests = Friend.objects.requests(other)
+    for r in requests:
+        print r.from_user
+        print r.to_user
+        if r.from_user == request.user:
+            r.cancel()
+            return HttpResponse()
+
+
+@login_required
+def friends_button(request, user_id):
+    other = User.objects.get(id=user_id)
+    are_friends = Friend.objects.are_friends(request.user, other)
+
+    if are_friends:
+        return render(request, 'website/buddy_button.html', {'are_friends': True, 'profile_user': other})
+
+    requested = False
+    requests = Friend.objects.requests(other)
+    for r in requests:
+        if r.from_user == request.user:
+            requested = True
+            break
+
+    if requested:
+        return render(request, 'website/buddy_button.html', {'requested': True, 'profile_user': other})
+    return render(request, 'website/buddy_button.html', {'are_friends': False, 'profile_user': other})
 
 
 @login_required
@@ -37,27 +110,6 @@ def set_match_winner(request, ranking_board_id, opponent_id, winner_id):
 @login_required
 def play_match(request, ranking_board_id, opponent_id):
     return render(request, 'website/match_play.html', {'board_id': ranking_board_id, 'opponent_id': opponent_id})
-
-# @login_required
-# def play_match(request, ranking_board_id, opponent_id):
-#     user = request.user
-#     match = Match.objects.filter((Q(challenge__challenger_id=user.id) & Q(challenge__challengee_id=opponent_id)) | (Q(challenge__challengee_id=user.id) & Q(challenge__challenger_id=opponent_id))).filter(challenge__ranking_board_id=ranking_board_id).exclude(challenge__status=MatchChallenge.STATUS_PLAYED).exclude(challenge__status=MatchChallenge.STATUS_DECLINED)
-#     if match:
-#         match = match[0]
-#     else:
-#         return HttpResponseNotFound()
-
-#     if request.method == 'POST':
-#         form = MatchForm(request.POST, instance=match)
-#         if form.is_valid():
-#             match = form.save(commit = False)
-#             match.set_winner(match.winner)
-#             match.save()
-#             return redirect('/')
-#     else:
-#         form = MatchForm(instance=match)
-#         form.fields['winner'].queryset = User.objects.filter(id__in=[match.challenge.challenger_id, match.challenge.challengee_id])
-#     return render(request, 'website/match_form.html', {'form': form})
 
 
 @login_required

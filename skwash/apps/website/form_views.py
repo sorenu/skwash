@@ -15,9 +15,11 @@ class RankingBoardCreate(CreateView):
         board.save()
         return super(RankingBoardCreate, self).form_valid(form)
 
+
 class RankingBoardUpdate(UpdateView):
     model = RankingBoard
     form_class= RankingBoardForm
+
 
 class RankingBoardDelete(DeleteView):
     model = RankingBoard

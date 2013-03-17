@@ -5,7 +5,7 @@ from django.forms.widgets import HiddenInput
 
 class RankingBoardForm(forms.ModelForm):
     players = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=User.objects.all())
-
+    
     class Meta:
         model = RankingBoard
         fields = ('title', 'players')
