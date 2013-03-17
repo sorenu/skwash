@@ -13,7 +13,7 @@ urlpatterns = patterns('skwash.apps.website.views',
     (r'^rankingboards/html/(?P<board_id>\d+)/$', 'ranking_board_html'),
 
     (r'^profile/$', 'profile'),
-    (r'^profile/(?P<username>\w+)/$', 'other_profile'),
+    (r'^profile/(?P<username>[\w\s]+)/$', 'other_profile'),
 
     (r'^challenges/$', ProtectedChallengesListView.as_view()),
     (r'^challenges/(?P<ranking_board_id>\d+)/(?P<opponent_id>\d+)/new/$', 'new_challenge'),
